@@ -49,7 +49,7 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/mongodb/bin
 DAEMON=/usr/local/mongodb/bin/mongod
 DAEMON_OPTS='--dbpath /var/lib/mongodb --rest --journal --logpath /var/log/mongodb/mongodb.log run'
-NAME=MongoDB
+NAME=mongod
 DESC=database
 # CONFIG="/etc/mongodb/mongo.conf" 
 
@@ -75,6 +75,7 @@ if [ -f /etc/default/$NAME ] ; then
 fi
 
 DAEMONUSER=mongodb
+
 # Check that the user exists (if we set a user)
 # Does the user exist?
 if [ -n "$DAEMONUSER" ] ; then
