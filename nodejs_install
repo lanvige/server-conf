@@ -4,9 +4,20 @@
 #
 # Copyright (c) 2011 Lanvige Jiang <lanvige@gmail.com>
 #
+# ExecJS in Rails 3.1 need a js runtimes
+# https://github.com/sstephenson/execjs
+# This install script come form:
+# https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
 ## END
 
-sudo apt-get install python-software-properties 
+echo "Update python"
+sudo apt-get install python-software-properties
+
+echo "Add nodejs ppa"
 sudo add-apt-repository ppa:jerome-etienne/neoip 
+
+echo "Update source"
 sudo apt-get update
+
+echo "Install node"
 sudo apt-get install nodejs
