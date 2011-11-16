@@ -6,42 +6,67 @@
 #
 ## END
 
-echo "Install mongoDB"
+version="2.0.1"
+srcPath="~/src"
 
-echo "Add mongodb user"
-sudo useradd -r mongodb
+echo "The MongoDB $version installation/upgrade will be start"
 
-# log file path
-sudo mkdir /var/log/mongodb
-# data file path
-sudo mkdir /var/lib/mongodb
-sudo chown mongodb /var/lib/mongodb
+echo "Please choose you action type"
+echo "0: Install (full with user create and init script) "
+echo "1: Upgrade (just upgrade the mongo engine)"
 
-echo "Create ~/src to store mongodb source"
-mkdir ~/src
-cd ~/src
+read type
+
+# Download and Install
+if [ ! -x "$srcPath"]; then
+	echo "Create ~/src to store mongodb source"
+	mkdir ~/src
+fi
+
+cd $srcPath
 
 echo "Download the mongodb src and excert to /usr/local"
-curl -O http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-1.8.1.tgz
-sudo tar zxf ~/src/mongodb-linux-x86_64-1.8.1.tgz -C /usr/local
-sudo ln -s /usr/local/mongodb-linux-x86_64-1.8.1 /usr/local/mongodb
+curl -O http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-$version.tgz
 
-echo "Config environment to add mongodb"
-export PATH=/usr/local/mongodb/bin/:$PATH
+sudo tar zxf ~/src/mongodb-linux-x86_64-$version.tgz -C /usr/local/
+sudo mv /usr/local/mongodb-linux-x86_64-$version.tgz /usr/local/mongodb-$version
+sudo ln -s /usr/local/mongodb-$version /usr/local/mongodb
 
-echo "Config init script"
-sudo cp ~/src/server-conf/mongod_init /etc/init.d/mongod
-sudo chmod +x /etc/init.d/mongod
 
-echo "Installing mongod as a service"
-# Install mongod as a service
-# /sbin/chkconfig mongod on
-sudo update-rc.d mongod defaults
+if [ $type -eq i ] ; then
+	echo "Add mongodb user"
+	sudo useradd -r mongodb
 
-echo "Start the mongodb"
-sudo /etc/init.d/mongod start
+	echo "Create mongodb db path"
+	# log file path
+	sudo mkdir /var/log/mongodb
+	# data file path
+	sudo mkdir /var/lib/mongodb
+	sudo chown mongodb /var/lib/mongodb
 
-echo "Don't forget to add below line to your environment"
-echo "export PATH='/usr/local/mongodb/bin/:$PATH'"
+	# Config
+	echo "Config environment to add mongodb"
+	export 'PATH=/usr/local/mongodb/bin/:$PATH'
 
-echo "Installer complete!"
+	echo "Config init script"
+	# Just use conf raw from github.
+	sudo curl https://raw.github.com/lanvige/server-conf/master/mongod_init >> /etc/init.d/mongod
+	sudo chmod +x /etc/init.d/mongod
+
+	echo "Installing mongod as a service"
+	# Install mongod as a service
+	# /sbin/chkconfig mongod on
+	sudo update-rc.d mongod defaults
+
+	echo "Start the mongodb"
+	sudo /etc/init.d/mongod start
+
+	echo "Install complete!"
+else if [ $type -eq u ] ; then
+	echo "Restart the mongodb"
+	sudo /etc/init.d/mongod restart
+
+	echo "Upgrade complete!"
+fi
+
+
