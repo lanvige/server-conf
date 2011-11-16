@@ -7,7 +7,8 @@
 ## END
 
 version="2.0.1"
-srcPath="~/src"
+src_path="~/src"
+profile_file="~/.bashrc"
 
 echo "The MongoDB $version installation/upgrade will be start"
 
@@ -18,12 +19,12 @@ echo "1: Upgrade (just upgrade the mongo engine)"
 read type
 
 # Download and Install
-if [ ! -x "$srcPath"]; then
+if [ ! -x "$src_path"]; then
 	echo "Create ~/src to store mongodb source"
 	mkdir ~/src
 fi
 
-cd $srcPath
+cd $src_path
 
 echo "Download the mongodb src and excert to /usr/local"
 curl -O http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-$version.tgz
@@ -46,11 +47,13 @@ if [ $type -eq i ] ; then
 
 	# Config
 	echo "Config environment to add mongodb"
-	export 'PATH=/usr/local/mongodb/bin/:$PATH'
+	echo '[[ -s "/usr/local/mongodb/bin/" ]] && source "/usr/local/mongodb/bin/" # Load MongoDB' >> "$profile_file"
+	#export 'PATH=/usr/local/mongodb/bin/:$PATH'
 
 	echo "Config init script"
 	# Just use conf raw from github.
-	sudo curl https://raw.github.com/lanvige/server-conf/master/mongod_init >> /etc/init.d/mongod
+	curl https://raw.github.com/lanvige/server-conf/master/mongod_init >> ~/src/mongod
+	sudo mv ~/src/mongod /etc/init.d/mongod
 	sudo chmod +x /etc/init.d/mongod
 
 	echo "Installing mongod as a service"
