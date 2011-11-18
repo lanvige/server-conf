@@ -17,7 +17,7 @@ echo "u: Upgrade (just upgrade the nodejs version)"
 
 read type
 
-$ sudo apt-get install build-essential libssl-dev git-core
+$ sudo apt-get install build-essential libssl-dev
 
 # Download and Install
 if [ ! -x "$src_path"]; then
