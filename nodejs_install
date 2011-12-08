@@ -6,7 +6,7 @@
 #
 ## END
 
-version="0.6.1"
+version="0.6.5"
 src_path="~/src"
 
 echo "The Nodejs $version installation/upgrade will be start"
