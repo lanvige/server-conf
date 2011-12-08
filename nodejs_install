@@ -17,16 +17,16 @@ echo "u: Upgrade (just upgrade the nodejs version)"
 
 read type
 
-$ sudo apt-get install build-essential libssl-dev git-core
+sudo apt-get install build-essential libssl-dev git-core
 
 # Download and Install
-if [ ! -x "$src_path"]; then
+if [ ! -d "$src_path" ]; then
 	echo "Create ~/src to store nodejs source"
 	mkdir ~/src
 fi
 
 # Remove if node src exist
-if [ ! -x "$src_path/node"]; then
+if [ ! -d "$src_path/node"]; then
 	echo "Remove the old src"
 	rm -rf node
 fi
